@@ -1,0 +1,9 @@
+Djangoid - Django-based OpenID server/provider
+==============================================
+Djangoid is an implementation of an OpenID[1] server, based on the Django[2] framework.
+
+It uses the Python OpenID library which can be found at [3].
+
+[1] http://www.openid.net
+[2] http://www.djangoproject.com
+[3] http://www.openidenabled.com/openid/libraries/python

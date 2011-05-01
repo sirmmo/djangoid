@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/djangoid/!svn/ver/8/trunk/djangoid/openid
+END
+oidutil.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/djangoid/!svn/ver/3/trunk/djangoid/openid/oidutil.py
+END
+dh.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/djangoid/!svn/ver/3/trunk/djangoid/openid/dh.py
+END
+association.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/djangoid/!svn/ver/3/trunk/djangoid/openid/association.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/djangoid/!svn/ver/3/trunk/djangoid/openid/__init__.py
+END
+cryptutil.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/djangoid/!svn/ver/3/trunk/djangoid/openid/cryptutil.py
+END
+CHANGELOG
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/djangoid/!svn/ver/3/trunk/djangoid/openid/CHANGELOG
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/djangoid/!svn/ver/3/trunk/djangoid/openid/COPYING
+END
+kvform.py
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/djangoid/!svn/ver/3/trunk/djangoid/openid/kvform.py
+END
+NEWS
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/djangoid/!svn/ver/3/trunk/djangoid/openid/NEWS
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/djangoid/!svn/ver/3/trunk/djangoid/openid/README
+END

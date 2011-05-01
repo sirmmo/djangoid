@@ -1,0 +1,36 @@
+This is the Python OpenID library.
+
+
+INSTALLATION
+============
+
+To install the base library, just run the following command:
+
+python setup.py install
+
+
+GETTING STARTED
+===============
+
+The examples directory includes an example server and consumer
+implementation.  See the README file in that directory for more
+information on running the examples.
+
+Library documentation is available in html form in the doc directory.
+
+
+DOCUMENTATION
+=============
+
+The documentation in this library is in Epydoc format, which is
+detailed at:
+
+  http://epydoc.sourceforge.net/
+
+
+CONTACT
+=======
+
+Send bug reports, suggestions, comments, and questions to
+dev@lists.openidenabled.com.
+

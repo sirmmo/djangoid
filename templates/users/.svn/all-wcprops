@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/djangoid/!svn/ver/23/trunk/djangoid/templates/users
+END
+accept_root.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/djangoid/!svn/ver/23/trunk/djangoid/templates/users/accept_root.html
+END
+yadis.xrds
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/djangoid/!svn/ver/5/trunk/djangoid/templates/users/yadis.xrds
+END
+login.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/djangoid/!svn/ver/20/trunk/djangoid/templates/users/login.html
+END
+userpage.html
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/djangoid/!svn/ver/20/trunk/djangoid/templates/users/userpage.html
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/djangoid/!svn/ver/8/trunk/djangoid/openid/store
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/djangoid/!svn/ver/3/trunk/djangoid/openid/store/__init__.py
+END
+interface.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/djangoid/!svn/ver/3/trunk/djangoid/openid/store/interface.py
+END

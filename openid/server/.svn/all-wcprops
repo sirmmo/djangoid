@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/djangoid/!svn/ver/8/trunk/djangoid/openid/server
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/djangoid/!svn/ver/3/trunk/djangoid/openid/server/__init__.py
+END
+trustroot.py
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/djangoid/!svn/ver/3/trunk/djangoid/openid/server/trustroot.py
+END
+server.py
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/djangoid/!svn/ver/3/trunk/djangoid/openid/server/server.py
+END

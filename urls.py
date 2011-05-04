@@ -9,6 +9,8 @@ urlpatterns = patterns('',
     url(r'^accept/$', 'users.views.accept'),
     url(r'^(?P<uid>[^/]+)/yadis/$', 'users.views.useryadis'),
     url(r'^(?P<uid>[^/]+)/foaf/$', 'users.views.userfoaf'),
-    url(r'^(?P<uid>[^/]+)/$', 'users.views.userpage'),
+
+    url(r'^(?P<uid>[^/]+)/profile$', 'users.views.userpage'),
+    url(r'^(?P<uid>[^/]+)/$', 'users.views.userpage_short', name="user_entrypoint"),
     url(r'^$', 'server.views.endpoint'),
 )

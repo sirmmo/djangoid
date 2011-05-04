@@ -72,9 +72,9 @@ class DjangoidUser(models.Model):
                                 return l
                         return f + " " + l
 
-        def get_attributes(self, public = False):
+        def get_attributes(self, public = False, area = "FOAF"):
                 attributes = {}
-                for a in UserAttribute.objects.filter(user = self, public = public):
+                for a in UserAttribute.objects.filter(user = self, public = public, foaf_name__not= None):
                         attributes[a.attribute.name] = a.value
                 return attributes
 
@@ -116,12 +116,25 @@ post_save.connect(createDJIDUser, sender = User)
 #Identities can have attributes. These items represent one possible attribute.
 class IdentityAttribute(models.Model):
         name = models.CharField("Name", max_length = 128, help_text = "Internal name of the attribute.", primary_key = True)
+
+	ax_name = models.TextField(blank = True, null=True)
+	foaf_name = models.TextField(blank = True, null=True)
+	namespace = models.TextField(blank=True, null=True)
+
+	openid_attribute = models.BooleanField(default=False)
+	foaf_attribute = models.BooleanField(default=False)
+
         title = models.CharField("Title", max_length = 128, help_text = "Title of the attribute, as displayed to the user")
         description = models.TextField("Description", blank = True, help_text = "Longer description of the attribute, as displayed to the user")
+	protocol = models.TextField(null=True, blank=True)
         regex = models.CharField("Validation regex", max_length = 128, blank = True, help_text = "Regex the value of this field is validated upon on updates")
 
         def __str__(self):
                 return self.title
+
+
+
+
 
 
 #This maps an attribute to a user, including a value, obviously

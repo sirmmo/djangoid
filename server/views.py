@@ -12,7 +12,7 @@ import urllib
 from django.views.decorators.csrf import csrf_exempt
 #Get a DjangoidUser object, based on a delegate URI
 def getDjangoidUserFromIdentity(identity):
-        s = settings.BASE_URL[:-1] + (urlreverse("users.views.userpage", kwargs = {"uid": "@blah@"})[:-1].replace("@blah@", "(?P<uid>[^/]+)/"))
+        s = settings.BASE_URL[:-1] + (urlreverse("user_entrypoint", kwargs = {"uid": "@blah@"})[:-1].replace("@blah@", "(?P<uid>[^/]+)/"))
         print s
         _identityRe = re.compile(s)
         uid = _identityRe.match(identity).groupdict()["uid"]

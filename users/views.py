@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 from django.core.urlresolvers import reverse as urlreverse
 from openid.server import server
@@ -32,13 +32,17 @@ def userpage_short(request, uid):
         return res
 @login_required
 def userpage(request, uid):
-        uid = User.objects.get(username = uid)
-        user = DjangoidUser.objects.get(djangouser = uid)
-        user.attributes = user.get_attributes(True)
-        mid = microid(user.get_user_page(), user.get_user_page())
-        res = render_to_response("users/userpage.html", {"server_url": settings.BASE_URL[:-1] + urlreverse("server.views.endpoint"), "user": user, "microid": mid})
-        res["X-XRDS-Location"] = user.get_yadis_uri()
-        return res
+	if request.user.username == uid:
+                uid = User.objects.get(username = uid)
+                user = DjangoidUser.objects.get(djangouser = uid)
+                user.attributes = user.get_attributes(True)
+                mid = microid(user.get_user_page(), user.get_user_page())
+                res = render_to_response("users/userpage.html", {"server_url": settings.BASE_URL[:-1] + urlreverse("server.views.endpoint"), "user": user, "microid": mid})
+                res["X-XRDS-Location"] = user.get_yadis_uri()
+                return res
+	else: 
+                #return only public data, but as a demo it still works
+		return HttpResponseForbidden()
 
 
 @csrf_exempt

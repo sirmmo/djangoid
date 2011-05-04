@@ -22,7 +22,7 @@ def userpage(request, uid):
         uid = User.objects.get(username = uid)
         #Check whether this is a YADIS request
         if checkYadisRequest(request):
-                return useryadis(request, uid.id)
+                return useryadis(request, uid.username)
 
         user = DjangoidUser.objects.get(djangouser = uid)
         user.attributes = user.get_attributes(True)
@@ -31,8 +31,6 @@ def userpage(request, uid):
         res["X-XRDS-Location"] = user.get_yadis_uri()
         return res
 
-def testid(request):
-        return userpage(request, "nicolas")
 @csrf_exempt
 def accept(request):
         r = convertToOpenIDRequest(request)

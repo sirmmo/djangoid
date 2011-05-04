@@ -1,26 +1,11 @@
-#Djangoid - Django-based OpenID server/provider
-#Copyright (C) 2006  Nicolas Trangez <ikke nicolast be>
-#
-#This program is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 2 of the License.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-#EOL
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.urlresolvers import reverse as urlreverse
 import datetime
-from djangoid.microidutils import microid, find_microid
+from microidutils import microid, find_microid
+from django.core.signals import *
+from django.db.models.signals import post_save
 
 #Represent one trusted root URI. Can be shared between several users.
 class TrustedRoot(models.Model):
@@ -29,19 +14,15 @@ class TrustedRoot(models.Model):
         def __str__(self):
                 return self.root
 
-        class Admin:
-                pass
 
 #Represent one system user, based on Django's internal user system.
 class DjangoidUser(models.Model):
-        #This seems not to work:
-        #djangouser = models.ForeignKey(User, primary_key = True)
         #So using an ugly hack... TODO: Fixme!
-        djangouser = models.CharField('Django user username', max_length = 30, primary_key = True, help_text = "This should be the username of an existing user in the django.contrib.auth system")
+        djangouser = models.ForeignKey(User, unique=True)
         trusted_roots = models.ManyToManyField(TrustedRoot, blank = True, null = True, help_text = "URI's trusted by this user")
 
         def __str__(self):
-                return self.djangouser
+                return self.djangouser.username
 
         def authenticate(self, root):
                 r = TrustedRoot.objects.filter(root = root)
@@ -58,10 +39,10 @@ class DjangoidUser(models.Model):
 
         def get_user_page(self):
                 #Strip of last / from BASE_URL
-                return settings.BASE_URL[:-1] + urlreverse("djangoid.users.views.userpage", kwargs = {"uid": self.djangouser})
+                return settings.BASE_URL[:-1] + urlreverse("users.views.userpage", kwargs = {"uid": str(self.djangouser)})
 
         def get_yadis_uri(self):
-                return settings.BASE_URL[:-1] + urlreverse("djangoid.users.views.useryadis", kwargs = {"uid": self.djangouser})
+                return settings.BASE_URL[:-1] + urlreverse("users.views.useryadis", kwargs = {"uid": str(self.djangouser)})
 
         def get_name(self):
                 """
@@ -126,9 +107,11 @@ class DjangoidUser(models.Model):
 
                 return store
 
+def createDJIDUser(sender, instance, **kwargs):
+    DjangoidUser.objects.get_or_create(djangouser=instance)
+
+post_save.connect(createDJIDUser, sender = User)
         
-        class Admin:
-                pass
 
 #Identities can have attributes. These items represent one possible attribute.
 class IdentityAttribute(models.Model):
@@ -140,8 +123,6 @@ class IdentityAttribute(models.Model):
         def __str__(self):
                 return self.title
 
-        class Admin:
-                pass
 
 #This maps an attribute to a user, including a value, obviously
 class UserAttribute(models.Model):
@@ -157,8 +138,6 @@ class UserAttribute(models.Model):
         def __str__(self):
                 return str(self.user) + ": " + str(self.attribute)
 
-        class Admin:
-                pass
 
         class Meta:
                 #Only store an attribute once for every user
@@ -190,11 +169,10 @@ class ClaimedUri(models.Model):
                                 self.is_valid = True
                 self.save()
 
-        class Admin:
-                date_hierarchy = "last_checked"
-                list_display = ("user", "uri", "is_valid", "get_microids",)
-                list_filter = ("user", "is_valid",)
-                search_fields = ["user", "uri"]
+#                date_hierarchy = "last_checked"
+  #              list_display = ("user", "uri", "is_valid", "get_microids",)
+  #              list_filter = ("user", "is_valid",)
+  #              search_fields = ["user", "uri"]
 
         class Meta:
                 unique_together = (("user", "uri"),)

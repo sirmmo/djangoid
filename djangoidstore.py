@@ -16,10 +16,10 @@
 #
 #EOL
 import time, base64
-from djangoid.server.models import OidStoreNonce, OidStoreAssociation, OidStoreSetting
-from djangoid.openid.store.interface import OpenIDStore
-from djangoid.openid.association import Association
-from djangoid.openid import cryptutil
+from server.models import OidStoreNonce, OidStoreAssociation, OidStoreSetting
+from openid.store.interface import OpenIDStore
+from openid.association import Association
+from openid import cryptutil
 
 #This is a pretty dumb rewrite of the original SqlStore
 class DjangoidStore(OpenIDStore):

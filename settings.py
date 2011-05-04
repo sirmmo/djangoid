@@ -1,20 +1,3 @@
-#Djangoid - Django-based OpenID server/provider
-#Copyright (C) 2006  Nicolas Trangez <ikke nicolast be>
-#
-#This program is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 2 of the License.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-#EOL
 # Django settings for djangoid project.
 
 DEBUG = True
@@ -26,12 +9,18 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'db.dat'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASES = {
+	'default': {
+     		'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+	        'NAME': 'openid_bantic_info',                      # Or path to database file if using sqlite3.
+	        'USER': 'postgres',                      # Not used with sqlite3.
+	        'PASSWORD': '',                  # Not used with sqlite3.
+	        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+	        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+BASE_DIR = "/var/www/djangoid/"
 
 # Local time zone for this installation. All choices can be found here:
 # http://www.postgresql.org/docs/current/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -62,24 +51,27 @@ SECRET_KEY = 'j=*#$h%7pi0x+4wydvg6yhioyp2qq_r^10l(#z^j_-mbyzmkd%'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+	'django.template.loaders.filesystem.Loader',
+	'django.template.loaders.app_directories.Loader',
+#    'django.template.loaders.filesystem.load_template_source',
+#    'django.template.loaders.app_directories.load_template_source',
 #     'django.template.loaders.eggs.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
 )
 
-ROOT_URLCONF = 'djangoid.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates".
     # Always use forward slashes, even on Windows.
-    "templates",
+    BASE_DIR + "templates",
 )
 
 INSTALLED_APPS = (
@@ -88,8 +80,35 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'djangoid.server',
-    'djangoid.users',
+    'django.contrib.messages',
+#    'django.contrib.staticfiles',
+    'server',
+    'users',
 )
 
-BASE_URL = "http://localhost:8000/"
+BASE_URL = "http://openid.bantic.info/"
+
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+

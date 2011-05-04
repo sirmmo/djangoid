@@ -1,52 +1,39 @@
-#Djangoid - Django-based OpenID server/provider
-#Copyright (C) 2006  Nicolas Trangez <ikke nicolast be>
-#
-#This program is free software; you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation; either version 2 of the License.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-#EOL
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.urlresolvers import reverse as urlreverse
 from openid.server import server
+from django.contrib.auth.models import User
+from server.views import getDjangoidUserFromIdentity
+from users.models import TrustedRoot, DjangoidUser, UserAttribute
+from openidhandlers import convertToOpenIDRequest, checkYadisRequest, convertToHttpResponse
+from microidutils import microid
 
-from djangoid.server.views import getDjangoidUserFromIdentity
-from djangoid.users.models import TrustedRoot, DjangoidUser, UserAttribute
-from djangoid.openidhandlers import convertToOpenIDRequest, checkYadisRequest, convertToHttpResponse
-from djangoid.microidutils import microid
+from django.views.decorators.csrf import csrf_exempt
 
 def useryadis(request, uid):
-        res = render_to_response("users/yadis.xrds", {"server_url": settings.BASE_URL[:-1] + urlreverse("djangoid.server.views.endpoint"), "uid": uid})
+        uid = User.objects.get(username = uid)
+        res = render_to_response("users/yadis.xrds", {"server_url": settings.BASE_URL[:-1] + urlreverse("server.views.endpoint"), "uid": uid})
         mimetype = "application/xrds+xml; charset=%s" % settings.DEFAULT_CHARSET
         res["Content-Type"] = mimetype
         return res
 
 def userpage(request, uid):
+        uid = User.objects.get(username = uid)
         #Check whether this is a YADIS request
         if checkYadisRequest(request):
-                return useryadis(request, uid)
+                return useryadis(request, uid.id)
 
         user = DjangoidUser.objects.get(djangouser = uid)
         user.attributes = user.get_attributes(True)
         mid = microid(user.get_user_page(), user.get_user_page())
-        res = render_to_response("users/userpage.html", {"server_url": settings.BASE_URL[:-1] + urlreverse("djangoid.server.views.endpoint"), "user": user, "microid": mid})
+        res = render_to_response("users/userpage.html", {"server_url": settings.BASE_URL[:-1] + urlreverse("server.views.endpoint"), "user": user, "microid": mid})
         res["X-XRDS-Location"] = user.get_yadis_uri()
         return res
 
 def testid(request):
         return userpage(request, "nicolas")
-
+@csrf_exempt
 def accept(request):
         r = convertToOpenIDRequest(request)
 
@@ -66,5 +53,6 @@ def accept(request):
                 return convertToHttpResponse(r.answer(True))
 
 def userfoaf(request, uid):
+	uid = User.objects.get(username = uid)
         user = DjangoidUser.objects.get(djangouser = uid)
         return HttpResponse(user.get_foaf().serialize(format = "pretty-xml"))

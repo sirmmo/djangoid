@@ -8,7 +8,7 @@ from server.views import getDjangoidUserFromIdentity
 from users.models import TrustedRoot, DjangoidUser, UserAttribute
 from openidhandlers import convertToOpenIDRequest, checkYadisRequest, convertToHttpResponse
 from microidutils import microid
-
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 def useryadis(request, uid):
@@ -18,7 +18,7 @@ def useryadis(request, uid):
         res["Content-Type"] = mimetype
         return res
 
-def userpage(request, uid):
+def userpage_short(request, uid):
         uid = User.objects.get(username = uid)
         #Check whether this is a YADIS request
         if checkYadisRequest(request):
@@ -30,6 +30,16 @@ def userpage(request, uid):
         res = render_to_response("users/userpage.html", {"server_url": settings.BASE_URL[:-1] + urlreverse("server.views.endpoint"), "user": user, "microid": mid})
         res["X-XRDS-Location"] = user.get_yadis_uri()
         return res
+@login_required
+def userpage(request, uid):
+        uid = User.objects.get(username = uid)
+        user = DjangoidUser.objects.get(djangouser = uid)
+        user.attributes = user.get_attributes(True)
+        mid = microid(user.get_user_page(), user.get_user_page())
+        res = render_to_response("users/userpage.html", {"server_url": settings.BASE_URL[:-1] + urlreverse("server.views.endpoint"), "user": user, "microid": mid})
+        res["X-XRDS-Location"] = user.get_yadis_uri()
+        return res
+
 
 @csrf_exempt
 def accept(request):

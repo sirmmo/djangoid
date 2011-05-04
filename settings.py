@@ -112,3 +112,4 @@ LOGGING = {
     }
 }
 
+DEFAULT_CHARSET = "utf-8"

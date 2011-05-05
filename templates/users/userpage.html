@@ -1,53 +1,53 @@
 {% extends "base.html" %}
 {% block "title" %}User page of {{ user.get_name }}{% endblock %}
 {% block "extrahead" %}
-                <link rel="openid.server" href="{{ server_url }}" />
-                <link rel="openid.delegate" href="{{ user.get_user_page }}/" />
-                <meta http-equiv="x-xrds-location" content="{{ user.get_yadis_uri }}" />
-                <meta name="microid" content="{{ microid }}" />
+		<link rel="openid.server" href="{{ server_url }}" />
+		<link rel="openid.delegate" href="{{ user.get_user_page }}/" />
+		<meta http-equiv="x-xrds-location" content="{{ user.get_yadis_uri }}" />
+		<meta name="microid" content="{{ microid }}" />
 {% endblock %}
 {% block "body" %}
-                <h1>User page of {{ user.get_name }}</h1>
-                <h2>About {{ user.get_name }}</h2>
-                <div class="vcard">
-                        {% if user.attributes.FIRST_NAME %}
-                        <div>Name: <span class="fn"><span class="given-name">{{ user.attributes.FIRST_NAME }}</span>{% if user.attributes.LAST_NAME %} <span class="family-name">{{ user.attributes.LAST_NAME }}</span>{% endif %}</span></div>
-                        {% endif %}
-                        {% if user.attributes.HOMEPAGE_URI %}
-                        <div>Homepage: <a class="url" href="{{ user.attributes.HOMEPAGE_URI }}">{{ user.attributes.HOMEPAGE_URI }}</a></div>
-                        {% endif %}
-                        {% if user.attributes.EMAIL %}
-                        <div>Email: <a class="email" href="mailto:{{ user.attributes.EMAIL }}">{{ user.attributes.EMAIL }}</a></div>
-                        {% endif %}
-                        {% if user.attributes.IM_JID %}
-                        <div>Jabber: <a class="url jid" href="xmpp:{{ user.attributes.IM_JID }}">{{ user.attributes.IM_JID }}</a></div>
-                        {% endif %}
-                        {% if user.attributes.NICKNAME %}
-                        <div>Nick: <span class="nickname">{{ user.attributes.NICKNAME }}</span></div>
-                        {% endif %}
-                        {% if user.attributes.DATE_OF_BIRTH %}
-                        <div>Date of birth: <abbr class="bday" title="{{ user.attributes.DATE_OF_BIRTH }}">{{ user.attributes.DATE_OF_BIRTH }}</abbr></div>
-                        {% endif %}
-                </div>
-                <h2>Claimed URIs</h2>
-                <table>
-                        <thead>
-                                <tr>
-                                        <th>URI</th>
-                                        <th>Valid</th>
-                                        <th>Last check</th>
-                                        <th>MicroID</th>
-                                </tr>
-                        </thead>
-                        <tbody>
-                                {% for uri in user.claimeduri_set.all %}
-                                <tr>
-                                        <td><a href="{{ uri.uri }}" rel="me">{{ uri.uri }}</a></td>
-                                        <td>{{ uri.is_valid }}</td>
-                                        <td>{{ uri.last_checked }}</td>
-                                        <td>{{ uri.get_microids }}</td>
-                                </tr>
-                                {% endfor %}
-                        </tbody>
-                </table>
+		<h1>User page of {{ user.get_name }}</h1>
+		<h2>About {{ user.get_name }}</h2>
+		<div class="vcard">
+			{% for attr in user.attributes %}
+			<div>{{attr.title}}<span class="fn"><span class="given-name">{{ user.attributes.FIRST_NAME }}</span>{% if user.attributes.LAST_NAME %} <span class="family-name">{{ user.attributes.LAST_NAME }}</span>{% endif %}</span></div>
+{% endfor %}
+			{% if user.attributes.HOMEPAGE_URI %}
+			<div>Homepage: <a class="url" href="{{ user.attributes.HOMEPAGE_URI }}">{{ user.attributes.HOMEPAGE_URI }}</a></div>
+			{% endif %}
+			{% if user.attributes.EMAIL %}
+			<div>Email: <a class="email" href="mailto:{{ user.attributes.EMAIL }}">{{ user.attributes.EMAIL }}</a></div>
+			{% endif %}
+			{% if user.attributes.IM_JID %}
+			<div>Jabber: <a class="url jid" href="xmpp:{{ user.attributes.IM_JID }}">{{ user.attributes.IM_JID }}</a></div>
+			{% endif %}
+			{% if user.attributes.NICKNAME %}
+			<div>Nick: <span class="nickname">{{ user.attributes.NICKNAME }}</span></div>
+			{% endif %}
+			{% if user.attributes.DATE_OF_BIRTH %}
+			<div>Date of birth: <abbr class="bday" title="{{ user.attributes.DATE_OF_BIRTH }}">{{ user.attributes.DATE_OF_BIRTH }}</abbr></div>
+			{% endif %}
+		</div>
+		<h2>Claimed URIs</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>URI</th>
+					<th>Valid</th>
+					<th>Last check</th>
+					<th>MicroID</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for uri in user.claimeduri_set.all %}
+				<tr>
+					<td><a href="{{ uri.uri }}" rel="me">{{ uri.uri }}</a></td>
+					<td>{{ uri.is_valid }}</td>
+					<td>{{ uri.last_checked }}</td>
+					<td>{{ uri.get_microids }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 {% endblock %}

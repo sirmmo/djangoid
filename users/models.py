@@ -71,11 +71,14 @@ class DjangoidUser(models.Model):
 			return f + " " + l
 
 	def get_attributes(self, public = False, area = ""):
-		attributes = {}
+		attributes = []
 		atts = UserAttribute.objects.filter(user = self, public = public)
 		if area == "FOAF": 
 			for a in atts.filter(attribute__foaf_attribute=True):
-				attributes[a.attribute.foaf_name] = a.value
+				attribute = {}
+				attribute["title"] = a.attribute.foaf_name
+				attribute["value"] = a.value
+				attributes.append(attribute)
 			return attributes
 		elif area == "openid":
 			for a in atts.filter(attribute__openid_attribute=True):
@@ -105,7 +108,7 @@ class DjangoidUser(models.Model):
 		user = BNode()
 		store.add((user, RDF.type, FOAF["Person"]))
 		for (k,v) in self.get_attributes(True, "FOAF").items():
-			store.add(user, FOAF[k], Literal(v))
+			store.add((user, FOAF[k], Literal(v)))
 		#store.add((user, FOAF["family_name"], Literal(attributes["LAST_NAME"])))
 		#store.add((user, FOAF["nick"], Literal(attributes["NICKNAME"])))
 		#store.add((user, FOAF["homepage"], URIRef(attributes["HOMEPAGE_URI"])))
@@ -153,15 +156,15 @@ class UserAttribute(models.Model):
 		return str(self.user) + ": " + str(self.attribute)
 
 
-	class Meta:
+	#class Meta:
 		#Only store an attribute once for every user
-		unique_together = (("user", "attribute"),)
+	#	unique_together = (("user", "attribute"),)
 
 #A claimed webpage. This will be checked using MicroID
 class ClaimedUri(models.Model):
 	user = models.ForeignKey(DjangoidUser)
 	uri = models.URLField()
-	description = models.CharField(max_length = 128, blank = True)
+	description = models.TextField(blank = True)
 	last_checked = models.DateTimeField(default = datetime.datetime(2006, 1, 1))
 	is_valid = models.BooleanField(default = False)
 

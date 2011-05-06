@@ -84,8 +84,10 @@ INSTALLED_APPS = (
 #    'django.contrib.staticfiles',
     'server',
     'users',
+    'registration',
 )
 
+ACCOUNT_ACTIVATION_DAYS = 7 
 BASE_URL = "http://openid.bantic.info/"
 LOGIN_URL = "/login"
 

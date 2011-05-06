@@ -78,6 +78,7 @@ class DjangoidUser(models.Model):
 				attribute = {}
 				attribute["title"] = a.attribute.foaf_name
 				attribute["value"] = a.value
+				attribute['protocol'] = a.attribute.protocol
 				attributes.append(attribute)
 			return attributes
 		elif area == "openid":
@@ -86,7 +87,11 @@ class DjangoidUser(models.Model):
 			return attributes
 		else:
 			for a in atts:
-				attributes[a.attribute.name] = a.value
+				attribute = {}
+                                attribute["title"] = a.attribute.title
+                                attribute["value"] = a.value
+                                attribute['protocol'] = a.attribute.protocol
+                                attributes.append(attribute)
 			return attributes
 
 
